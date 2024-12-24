@@ -1,3 +1,45 @@
+1) Склонировать. Поправить файл `.env` в корне;
+2) Запустить `.setup sh ` (предварительно должен стоять докер и докер компоуз);
+3) Далее проверить mullvad;
+4) Запуск образа с парсером (добавить переменные и сеть);
+5) Проверить с контейнера curl https://ifconfig.me или:
+```
+docker exec -it parser1 curl https://api64.ipify.org
+```
+Ожидаемый результат: IP-адрес Mullvad.
+ 
+
+
+`Config docker-compose`
+```
+services:
+  parser1:
+    image: my_image
+    networks:
+      - mullvad-proxy_default
+    environment:
+      - HTTP_PROXY=http://mvpn-proxy:8118
+      - HTTPS_PROXY=http://mvpn-proxy:8118
+    ports:
+      - "3000:3000"
+```
+Для докерфайла:
+```
+ENV HTTP_PROXY=http://mvpn-proxy:8118
+ENV HTTPS_PROXY=http://mvpn-proxy:8118
+```
+Если запускается вручную:
+```
+docker run -d \
+  --name=parser1 \
+  --network=mullvad-proxy_default \
+  -e HTTP_PROXY=http://mvpn-proxy:8118 \
+  -e HTTPS_PROXY=http://mvpn-proxy:8118 \
+  -p 3000:3000 \
+  my_image
+```
+
+
 # Mullvad VPN HTTP and SOCKS5 Proxy using Docker
 
 This docker compose setup runs the [Mullvad VPN app](https://mullvad.net/en/download/linux/) inside a docker container and exposes an HTTP proxy using privoxy (port 8118) and SOCKS5 proxy using nginx (port 1080). The Mullvad CLI can still be used to control the application.
