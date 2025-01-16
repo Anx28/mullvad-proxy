@@ -42,6 +42,7 @@ services:
     restart: unless-stopped
     depends_on:
       - mullvad
-    ports:
-      - ${HTTP_PORT:-8118}:8118
-      - ${SOCK5_PORT:-1080}:1080
+#    ports:
+#      - ${HTTP_PORT:-8118}:8118
+#      - ${SOCK5_PORT:-1080}:1080
+
